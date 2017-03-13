@@ -264,7 +264,10 @@ func (r *marathonClient) apiCall(method, url string, body, result interface{}) e
 		}
 		response, err := r.httpClient.Do(request)
 		if err != nil {
-			r.hosts.markDown(member)
+			if !r.config.DisableMarkDown {
+				r.hosts.markDown(member)
+			}
+
 			// step: attempt the request on another member
 			r.debugLog.Printf("apiCall(): request failed on host: %s, error: %s, trying another\n", member, err)
 			continue
@@ -297,7 +300,9 @@ func (r *marathonClient) apiCall(method, url string, body, result interface{}) e
 		// step: if the member node returns a >= 500 && <= 599 we should try another node?
 		if response.StatusCode >= 500 && response.StatusCode <= 599 {
 			// step: mark the host as down
-			r.hosts.markDown(member)
+			if !r.config.DisableMarkDown {
+				r.hosts.markDown(member)
+			}
 			r.debugLog.Printf("apiCall(): request failed, host: %s, status: %d, trying another\n", member, response.StatusCode)
 			continue
 		}
