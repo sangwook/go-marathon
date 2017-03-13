@@ -54,6 +54,8 @@ type Config struct {
 	HTTPClient *http.Client
 	// wait time (in milliseconds) between repetitive requests to the API during polling
 	PollingWaitTime time.Duration
+	// DisableMarkDown is disabled of mark of down of the marathon
+	DisableMarkDown bool
 }
 
 // NewDefaultConfig create a default client config
