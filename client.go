@@ -291,7 +291,10 @@ func (r *marathonClient) apiCall(method, url string, body, result interface{}) e
 			if result != nil {
 				if err := json.Unmarshal(respBody, result); err != nil {
 					r.debugLog.Printf("apiCall(): failed to unmarshall the response from marathon, error: %s\n", err)
-					return ErrInvalidResponse
+					// marathon이 2XX를 응답하지만, body에 json을 넣지 않고 응답할때가 있다.
+					// 결국 해당 request는 정상처리 되기 때문에, json이 없더라도 성공으로 응답하도록
+					// 에러를 응답하는 부분을 주석처리 함.
+					// return ErrInvalidResponse
 				}
 			}
 			return nil
